@@ -13,10 +13,18 @@ module Hamlbars
   autoload :Ext,      File.join(ROOT, 'hamlbars', 'ext')
   autoload :Template, File.join(ROOT, 'hamlbars', 'template')
 
-  Haml::Compiler.send(:include, Ext::Compiler)
+  if Haml::VERSION > '4.0.7'
+    Haml::AttributeBuilder.send(:include, Ext::Compiler)
+  else
+    Haml::Compiler.send(:include, Ext::Compiler)
+  end
 
   if defined? Sprockets
-    Sprockets.register_engine '.hamlbars', Template
+    if Sprockets.respond_to?(:register_engine)
+      args = ['.hamlbars', Template]
+      args << { silence_deprecation: true } if Sprockets::VERSION.start_with?("3")
+      Sprockets.register_engine(*args)
+    end
   end
 
 end

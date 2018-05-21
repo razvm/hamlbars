@@ -26,9 +26,15 @@ describe Hamlbars::Template do
     expect(to_handlebars('')).to eq('')
   end
 
-  it "should bind element attributes" do
+  it "should bind element attributes", type: :haml4 do
     expect(to_handlebars('%img{ :bind => { :src => "logoUri" }, :alt => "Logo" }')).to eq(
       "<img {{bind-attr src=\"logoUri\"}} alt=\'Logo\' />"
+    )
+  end
+
+  it "should bind element attributes", type: :haml5 do
+    expect(to_handlebars('%img{ :bind => { :src => "logoUri" }, :alt => "Logo" }')).to eq(
+      "<img alt=\'Logo\' {{bind-attr src=\"logoUri\"}} />"
     )
   end
 
